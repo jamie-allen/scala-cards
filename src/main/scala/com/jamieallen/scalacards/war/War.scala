@@ -4,9 +4,8 @@ case class Card(card: Int, name: String)
 
 object War extends App {
   println("Playing war!")
-/*
-  val deck = Array[Card](
-    Card(0, "Ace of Clubs"),
+
+  val deck = Seq(
     Card(1, "2 of Clubs"),
     Card(2, "3 of Clubs"),
     Card(3, "4 of Clubs"),
@@ -19,8 +18,8 @@ object War extends App {
     Card(10, "Jack of Clubs"),
     Card(11, "Queen of Clubs"),
     Card(12, "King of Clubs"),
+    Card(13, "Ace of Clubs"),
 
-    Card(13, "Ace of Diamonds"),
     Card(14, "2 of Diamonds"),
     Card(15, "3 of Diamonds"),
     Card(16, "4 of Diamonds"),
@@ -33,8 +32,8 @@ object War extends App {
     Card(23, "Jack of Diamonds"),
     Card(24, "Queen of Diamonds"),
     Card(25, "King of Diamonds"),
+    Card(26, "Ace of Diamonds"),
 
-    Card(26, "Ace of Hearts"),
     Card(27, "2 of Hearts"),
     Card(28, "3 of Hearts"),
     Card(29, "4 of Hearts"),
@@ -47,8 +46,8 @@ object War extends App {
     Card(36, "Jack of Hearts"),
     Card(37, "Queen of Hearts"),
     Card(38, "King of Hearts"),
+    Card(39, "Ace of Hearts"),
 
-    Card(39, "Ace of Spades"),
     Card(40, "2 of Spades"),
     Card(41, "3 of Spades"),
     Card(42, "4 of Spades"),
@@ -60,8 +59,14 @@ object War extends App {
     Card(48, "10 of Spades"),
     Card(49, "Jack of Spades"),
     Card(50, "Queen of Spades"),
-    Card(51, "King of Spades"))
-*/
+    Card(51, "King of Spades"),
+    Card(52, "Ace of Spades")
+  )
+
+  println(s"Deck: $deck")
+
+  val shuffledDeck = scala.util.Random.shuffle(deck)
+  println(s"Shuffled deck: $shuffledDeck")
 }
 
 class War {
