@@ -1,7 +1,7 @@
 package com.jamieallen.scalacards.war
 
 case class Card(id: Int, name: String)
-case class Player(name: String, cards: Seq[Card])
+case class Player(name: String, var cards: Seq[Card])
 
 object War extends App {
   println("Playing war!")
@@ -77,4 +77,31 @@ class War {
     val player2 = Player ("Daddy", player2Cards)
     println(s"\n\nPLAYER 1: $player1")
     println(s"\n\nPLAYER 2: $player2")
+
+    var newPlayer1Cards: Seq[Card] = List()
+    var newPlayer2Cards: Seq[Card] = List()
+
+    var index, player1Wins, player2Wins = 0
+    while (index < player1.cards.length) {
+        val p1Card = player1.cards(index)
+        val p2Card = player2.cards(index)
+
+        if ((p1Card.id % 13) >= (p2Card.id % 13)) {
+            println(s"${player1.name} WINS $index! P1: $p1Card, P2: $p2Card")
+            newPlayer1Cards = (newPlayer1Cards :+ p1Card) :+ p2Card
+            player1Wins += 1
+        }
+        else {
+            println(s"${player2.name} WINS $index! P1: $p1Card, P2: $p2Card")
+            newPlayer2Cards = (newPlayer2Cards :+ p1Card) :+ p2Card
+            player2Wins += 1
+        }
+
+        index += 1
+    }
+
+    player1.cards = newPlayer1Cards
+    player2.cards = newPlayer2Cards
+
+    println(s"FINISHED!\n\nPlayer1 won $player1Wins times, cards: ${player1.cards}\n\nPlayer2 won $player2Wins times, cards: ${player2.cards}")
 }
