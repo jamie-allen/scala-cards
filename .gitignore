@@ -1,0 +1,15 @@
+outline.asc
+scala-cards.log
+/bin/
+.DS_Store
+.cache
+.classpath
+.history
+.project
+.settings/
+binold/
+project/
+project/target/
+target/
+null/
+temp/
