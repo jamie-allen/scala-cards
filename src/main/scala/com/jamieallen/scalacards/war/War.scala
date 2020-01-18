@@ -1,7 +1,37 @@
 package com.jamieallen.scalacards.war
 
+import scala.collection.immutable.Queue
+
 case class Card(id: Int, name: String)
-case class Player(name: String, var cards: Seq[Card])
+
+case class Player(name: String, var cards: Queue[Card]) {
+    var newCards = Queue[Card]()
+
+    def getCard: Option[Card] = {
+        var returnCard: Option[Card] = None
+
+        // If the deck is empty, and they have no new cards, return None to end game
+        if (cards.isEmpty)
+            println(s"$name is out of cards")
+            if (newCards.isEmpty) {
+                // Reset their cards with the won cards, said like "Saul" from the Jerky Boys
+                println(s"$name is going to new cards, because they have them")
+                cards = newCards
+                returnCard = cards.dequeueOption.map(_._1)
+            }
+        else
+            // Return the next card from the current set
+            returnCard = cards.dequeueOption.map(_._1)
+
+        println(s"$name is ruturning $returnCard")
+
+        returnCard
+    }
+
+    def addCards(wonCards: Seq[Card]) =
+        // Prepend all won cards
+        newCards ++: wonCards
+}
 
 object War extends App {
   println("Playing war!")
@@ -14,7 +44,7 @@ object War extends App {
         Card(4, "5 of Clubs"),
         Card(5, "6 of Clubs"),
         Card(6, "7 of Clubs"),
-        Card(7, "8 of Clubs"),
+        Card(7, "8 of Clubs")/*,
         Card(8, "9 of Clubs"),
         Card(9, "10 of Clubs"),
         Card(10, "Jack of Clubs"),
@@ -62,7 +92,7 @@ object War extends App {
         Card(49, "Jack of Spades"),
         Card(50, "Queen of Spades"),
         Card(51, "King of Spades"),
-        Card(52, "Ace of Spades")
+        Card(52, "Ace of Spades")*/
     )
   )
   println(s"Shuffled deck: $shuffledDeck")
@@ -73,58 +103,26 @@ object War extends App {
 class War {
     val (player1Cards, player2Cards) = War.shuffledDeck.partition(_.id % 2 == 0)
 
-    val player1 = Player("Layla", player1Cards)
-    val player2 = Player ("Daddy", player2Cards)
-    println(s"\n\nPLAYER 1: $player1")
-    println(s"\n\nPLAYER 2: $player2")
+    val player1 = Player("Layla", Queue.from(player1Cards))
+    val player2 = Player ("Daddy", Queue.from(player2Cards))
 
-    var newPlayer1Cards: Seq[Card] = List()
-    var newPlayer2Cards: Seq[Card] = List()
-
-    var index1, index2, player1Wins, player2Wins = 0
-    while (index1 < player1.cards.length) {
-        var p1Card: Card = null
-        var p2Card: Card = null
-        p1Card = player1.cards(index1)
-        
-        if (index2 >= player2.cards.length) {
-            if (player2Cards.length == 0)
-                exitGame()
-            else {
-                index2 = 0
-                player2.cards = player2Cards
-            }
-        }
-
-        p2Card = player2.cards(index2)
-        index2 += 1
-
-        if ((p1Card.id % 13) > (p2Card.id % 13)) {
-            println(s"${player1.name} WINS $index1! P1: $p1Card, P2: $p2Card")
-            newPlayer1Cards = (newPlayer1Cards :+ p1Card) :+ p2Card
-            player1Wins += 1
+    var p1Card = player1.getCard
+    var p2Card = player2.getCard
+    println(s"Playing, p1: $p1Card, p2: $p2Card")
+    while (p1Card != None && p2Card != None) {
+        println(s"Got cards, p1: ${p1Card.get.name}, p2: ${p2Card.get.name}")
+        if ((p1Card.get.id % 13) > (p2Card.get.id % 13)) {
+            println(s"${player1.name} WINS! P1: ${p1Card.get}, P2: ${p2Card.get}")
+            player1.addCards(List(p1Card.get, p2Card.get))
         }
         else {
-            println(s"${player2.name} WINS $index2! P1: $p1Card, P2: $p2Card")
-            newPlayer2Cards = (newPlayer2Cards :+ p1Card) :+ p2Card
-            player2Wins += 1
+            println(s"${player2.name} WINS! P1: ${p1Card.get}, P2: ${p2Card.get}")
+            player2.addCards(List(p1Card.get, p2Card.get))
         }
 
-        index1 += 1
-        if (index1 >= player1.cards.length) {
-            if (player1Cards.length == 0)
-                exitGame()
-            else {
-                index1 = 0
-                player1.cards = player1Cards
-            }
-        }
+        p1Card = player1.getCard
+        p2Card = player2.getCard
     }
 
-    player1.cards = newPlayer1Cards
-    player2.cards = newPlayer2Cards
-
-    println(s"FINISHED!\n\nPlayer1 won $player1Wins times, cards: ${player1.cards}\n\nPlayer2 won $player2Wins times, cards: ${player2.cards}")
-
-    def exitGame() = System.exit(0)
+    println(s"\n\n================================================\nFINISHED!\n\nPlayer1 cards: ${player1.cards}\n\nPlayer2 cards: ${player2.cards}")
 }
