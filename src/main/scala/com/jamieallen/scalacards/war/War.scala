@@ -7,11 +7,13 @@ case class Card(id: Int, name: String)
 case class Player(name: String, var cards: Queue[Card]) {
     var newCards = Queue[Card]()
 
+    println(s"Cards: $cards")
+
     def getCard: Option[Card] = {
         var returnCard: Option[Card] = None
 
         // If the deck is empty, and they have no new cards, return None to end game
-        if (cards.isEmpty)
+        if (cards.isEmpty) {
             println(s"$name is out of cards")
             if (newCards.isEmpty) {
                 // Reset their cards with the won cards, said like "Saul" from the Jerky Boys
@@ -19,11 +21,12 @@ case class Player(name: String, var cards: Queue[Card]) {
                 cards = newCards
                 returnCard = cards.dequeueOption.map(_._1)
             }
+        }
         else
             // Return the next card from the current set
             returnCard = cards.dequeueOption.map(_._1)
 
-        println(s"$name is ruturning $returnCard")
+        println(s"$name is returning $returnCard")
 
         returnCard
     }
@@ -104,7 +107,7 @@ class War {
     val (player1Cards, player2Cards) = War.shuffledDeck.partition(_.id % 2 == 0)
 
     val player1 = Player("Layla", Queue.from(player1Cards))
-    val player2 = Player ("Daddy", Queue.from(player2Cards))
+    val player2 = Player ("Sophie", Queue.from(player2Cards))
 
     var p1Card = player1.getCard
     var p2Card = player2.getCard
