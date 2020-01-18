@@ -81,27 +81,50 @@ class War {
     var newPlayer1Cards: Seq[Card] = List()
     var newPlayer2Cards: Seq[Card] = List()
 
-    var index, player1Wins, player2Wins = 0
-    while (index < player1.cards.length) {
-        val p1Card = player1.cards(index)
-        val p2Card = player2.cards(index)
+    var index1, index2, player1Wins, player2Wins = 0
+    while (index1 < player1.cards.length) {
+        var p1Card: Card = null
+        var p2Card: Card = null
+        p1Card = player1.cards(index1)
+        
+        if (index2 >= player2.cards.length) {
+            if (player2Cards.length == 0)
+                exitGame()
+            else {
+                index2 = 0
+                player2.cards = player2Cards
+            }
+        }
 
-        if ((p1Card.id % 13) >= (p2Card.id % 13)) {
-            println(s"${player1.name} WINS $index! P1: $p1Card, P2: $p2Card")
+        p2Card = player2.cards(index2)
+        index2 += 1
+
+        if ((p1Card.id % 13) > (p2Card.id % 13)) {
+            println(s"${player1.name} WINS $index1! P1: $p1Card, P2: $p2Card")
             newPlayer1Cards = (newPlayer1Cards :+ p1Card) :+ p2Card
             player1Wins += 1
         }
         else {
-            println(s"${player2.name} WINS $index! P1: $p1Card, P2: $p2Card")
+            println(s"${player2.name} WINS $index2! P1: $p1Card, P2: $p2Card")
             newPlayer2Cards = (newPlayer2Cards :+ p1Card) :+ p2Card
             player2Wins += 1
         }
 
-        index += 1
+        index1 += 1
+        if (index1 >= player1.cards.length) {
+            if (player1Cards.length == 0)
+                exitGame()
+            else {
+                index1 = 0
+                player1.cards = player1Cards
+            }
+        }
     }
 
     player1.cards = newPlayer1Cards
     player2.cards = newPlayer2Cards
 
     println(s"FINISHED!\n\nPlayer1 won $player1Wins times, cards: ${player1.cards}\n\nPlayer2 won $player2Wins times, cards: ${player2.cards}")
+
+    def exitGame() = System.exit(0)
 }
