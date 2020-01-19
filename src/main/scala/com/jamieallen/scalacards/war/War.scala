@@ -102,27 +102,30 @@ object War extends App {
   )
   println(s"Shuffled deck: $shuffledDeck")
 
-  val war = new War()
+
+  val war = new War().play(shuffledDeck)
 }
 
 class War {
-    // Deal the shuffled cards, one at a time to each
-    val (player1Cards, player2Cards) = War.shuffledDeck.partition(_.id % 2 == 0)
+    def play(shuffledDeck: Seq[Card]) = {
+        // Deal the shuffled cards, one at a time to each
+        val (player1Cards, player2Cards) = War.shuffledDeck.partition(_.id % 2 == 0)
 
-    // Set up the players with their cards
-    val player1 = Player("Layla", Queue.from(player1Cards))
-    val player2 = Player ("Sophie", Queue.from(player2Cards))
+        // Set up the players with their cards, and play
+        val player1 = Player("Layla", Queue.from(player1Cards))
+        val player2 = Player ("Sophie", Queue.from(player2Cards))
 
-    // Get their first cards and start
-    var p1Card = player1.getCard
-    var p2Card = player2.getCard
-    while (p1Card != None && p2Card != None) {
-        playHand(player1, player2, p1Card, p2Card)
-        p1Card = player1.getCard
-        p2Card = player2.getCard
+        // Get their first cards and start
+        var p1Card = player1.getCard
+        var p2Card = player2.getCard
+        while (p1Card != None && p2Card != None) {
+            playHand(player1, player2, p1Card, p2Card)
+            p1Card = player1.getCard
+            p2Card = player2.getCard
+        }
+
+        println(s"\n\n================================================\nFINISHED!")
     }
-
-    println(s"\n\n================================================\nFINISHED!")
 
     def playHand(player1: Player, player2: Player, p1Card: Option[Card], p2Card: Option[Card]): Unit = {
         if ((p1Card.get.id % 13) > (p2Card.get.id % 13)) {
