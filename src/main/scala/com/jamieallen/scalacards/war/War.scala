@@ -106,17 +106,31 @@ object War extends App {
 }
 
 class War {
+    // Deal the shuffled cards, one at a time to each
     val (player1Cards, player2Cards) = War.shuffledDeck.partition(_.id % 2 == 0)
 
+    // Set up the players with their cards
     val player1 = Player("Layla", Queue.from(player1Cards))
     val player2 = Player ("Sophie", Queue.from(player2Cards))
 
+    // Get their first cards and start
     var p1Card = player1.getCard
     var p2Card = player2.getCard
     while (p1Card != None && p2Card != None) {
+        playHand(player1, player2, p1Card, p2Card)
+        p1Card = player1.getCard
+        p2Card = player2.getCard
+    }
+
+    println(s"\n\n================================================\nFINISHED!")
+
+    def playHand(player1: Player, player2: Player, p1Card: Option[Card], p2Card: Option[Card]): Unit = {
         if ((p1Card.get.id % 13) > (p2Card.get.id % 13)) {
             println(s"${player1.name} WINS! P1: ${p1Card.get}, P2: ${p2Card.get}")
             player1.addCards(List(p1Card.get, p2Card.get))
+        }
+        else if ((p1Card.get.id % 13) == (p2Card.get.id % 13)) {
+            // WAR!
         }
         else {
             println(s"${player2.name} WINS! P1: ${p1Card.get}, P2: ${p2Card.get}")
@@ -124,10 +138,5 @@ class War {
         }
 
         println(s"Player one: $player1, Player 2: $player2")
-
-        p1Card = player1.getCard
-        p2Card = player2.getCard
     }
-
-    println(s"\n\n================================================\nFINISHED!")
 }
