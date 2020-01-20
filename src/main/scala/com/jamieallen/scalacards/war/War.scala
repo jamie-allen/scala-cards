@@ -38,7 +38,7 @@ case class Player(name: String, var cards: Queue[Card]) {
     }
 }
 
-object War extends App {
+object Deck extends App {
   println("Playing war!")
 
   val shuffledDeck = scala.util.Random.shuffle(
@@ -103,13 +103,13 @@ object War extends App {
   println(s"Shuffled deck: $shuffledDeck")
 
 
-  val war = new War().play(shuffledDeck)
+  val wargame = new WarGame().play(shuffledDeck)
 }
 
-class War {
+class WarGame {
     def play(shuffledDeck: Seq[Card]) = {
         // Deal the shuffled cards, one at a time to each
-        val (player1Cards, player2Cards) = War.shuffledDeck.partition(_.id % 2 == 0)
+        val (player1Cards, player2Cards) = Deck.shuffledDeck.partition(_.id % 2 == 0)
 
         // Set up the players with their cards, and play
         val player1 = Player("Layla", Queue.from(player1Cards))
@@ -119,7 +119,8 @@ class War {
         var p1Card = player1.getCard
         var p2Card = player2.getCard
         while (p1Card != None && p2Card != None) {
-            playHand(player1, player2, p1Card, p2Card)
+            val winner = playHand(player1, player2, p1Card, p2Card)
+            winner.addCards(List(p1Card.get, p2Card.get))
             p1Card = player1.getCard
             p2Card = player2.getCard
         }
@@ -127,19 +128,45 @@ class War {
         println(s"\n\n================================================\nFINISHED!")
     }
 
-    def playHand(player1: Player, player2: Player, p1Card: Option[Card], p2Card: Option[Card]): Unit = {
-        if ((p1Card.get.id % 13) > (p2Card.get.id % 13)) {
-            println(s"${player1.name} WINS! P1: ${p1Card.get}, P2: ${p2Card.get}")
-            player1.addCards(List(p1Card.get, p2Card.get))
+    def playHand(player1: Player, player2: Player, p1Card: Option[Card], p2Card: Option[Card]): Player = {
+        var winner: Player = null
+
+        // We don't care about suit, we only care if the card is stronger than the other, or equivalent.  So
+        // we use modulus to determine which card and player wins, or if there is a war as a result of having
+        // equivalent cards.
+        val result = (p1Card.get.id % 13) - (p2Card.get.id % 13)
+        if (result > 0) {
+            println(s"${player1.name} WINS with $result! P1: ${p1Card.get}, P2: ${p2Card.get}")
+            winner = player1
         }
-        else if ((p1Card.get.id % 13) == (p2Card.get.id % 13)) {
-            // WAR!
+        else if (result < 0) {
+            println(s"${player2.name} WINS with $result! P1: ${p1Card.get}, P2: ${p2Card.get}")
+            winner = player2
         }
         else {
-            println(s"${player2.name} WINS! P1: ${p1Card.get}, P2: ${p2Card.get}")
-            player2.addCards(List(p1Card.get, p2Card.get))
+            // WAR!  Get 2 cards from each to hold as winnings, and then play the next two
+            println("*********** War! ***********")
+            val holdCards: Seq[Card] = List()
+            player1.getCard.map(_ +: holdCards)
+            player1.getCard.map(_ +: holdCards)
+            player2.getCard.map(_ +: holdCards)
+            player2.getCard.map(_ +: holdCards)
+
+            val newP1Card = player1.getCard
+            val newP2Card = player2.getCard
+            if (newP1Card != None && newP2Card != None)
+                winner = playHand(player1, player2, newP1Card, newP2Card)
+            else if (newP1Card != None && newP2Card == None)
+                winner = player1
+            else if (newP1Card == None && newP2Card != None)
+                winner = player2
+//            else
+                // who wins if they both ran out?
+
+            winner.addCards(holdCards)
         }
 
         println(s"Player one: $player1, Player 2: $player2")
+        winner
     }
 }
