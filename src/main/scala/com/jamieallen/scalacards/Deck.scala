@@ -2,7 +2,7 @@ package com.jamieallen.scalacards
 
 case class Card(id: Int, name: String)
 
-object Deck extends App {
+object Deck {
   val shuffledDeck = scala.util.Random.shuffle(
     Seq(
         Card(1, "2 of Clubs"),

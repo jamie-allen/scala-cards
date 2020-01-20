@@ -1,4 +1,4 @@
-/********************************************************
+/**************************************************************************************
  * Copyright Jamie Allen, 2020
  *
  * Why yes, this is a flower box.  I'm old school.
@@ -22,7 +22,7 @@
  * I've coded this is in Scala as an interesting programming exercise, because it 
  * involves recursion and other interesting rules.  And because I've missed programming.
  *
- ********************************************************/
+ ***************************************************************************************/
 
 package com.jamieallen.scalacards.war
 
@@ -63,7 +63,7 @@ case class Player(name: String, var cards: Queue[Card]) {
     }
 }
 
-object WarGame {
+object WarGame extends App {
     new WarGame().play(Deck.shuffledDeck)
 }
 
@@ -79,14 +79,15 @@ class WarGame {
         // Get their first cards and start
         var p1Card = player1.getCard
         var p2Card = player2.getCard
+        var winner: Player = null
         while (p1Card != None && p2Card != None) {
-            val winner = playHand(player1, player2, p1Card, p2Card)
+            winner = playHand(player1, player2, p1Card, p2Card)
             winner.addCards(List(p1Card.get, p2Card.get))
             p1Card = player1.getCard
             p2Card = player2.getCard
         }
 
-        println(s"\n\n================================================\nFINISHED!")
+        println(s"\n\n================================================\nFINISHED! The winner is ${winner.name}")
     }
 
     def playHand(player1: Player, player2: Player, p1Card: Option[Card], p2Card: Option[Card]): Player = {
@@ -127,7 +128,6 @@ class WarGame {
             winner.addCards(holdCards)
         }
 
-        println(s"Player one: $player1, Player 2: $player2")
         winner
     }
 }
