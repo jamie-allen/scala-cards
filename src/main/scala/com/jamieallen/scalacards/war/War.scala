@@ -64,11 +64,12 @@ case class Player(name: String, var cards: Queue[Card]) {
 }
 
 object WarGame extends App {
-    new WarGame().play(Deck.shuffledDeck)
+    val winner = new WarGame().play(Deck.shuffledDeck)
+    println(s"\n\n================================================\nFINISHED! The winner is ${winner.name}")
 }
 
 class WarGame {
-    def play(shuffledDeck: Seq[Card]) = {
+    def play(shuffledDeck: Seq[Card]): Player = {
         // Deal the shuffled cards, one at a time to each
         val (player1Cards, player2Cards) = Deck.shuffledDeck.partition(_.id % 2 == 0)
 
@@ -87,7 +88,7 @@ class WarGame {
             p2Card = player2.getCard
         }
 
-        println(s"\n\n================================================\nFINISHED! The winner is ${winner.name}")
+        winner
     }
 
     def playHand(player1: Player, player2: Player, p1Card: Option[Card], p2Card: Option[Card]): Player = {
@@ -114,6 +115,17 @@ class WarGame {
             player2.getCard.map(_ +: holdCards)
             player2.getCard.map(_ +: holdCards)
 
+            /*
+            / THERE IS A FUNDAMENTAL PROBLEM WITH THIS CODE.
+            /
+            / I haven't figured out how to handle when a player runs out of cards in the middle 
+            / of a war.  The logic is convoluted, as they could run out in the middle of getting
+            / two cards in the preceding code, hence mapping over the Options.  The flaw is 
+            / making the program end early.
+            /
+            / As of now, I haven't figure out how to structure this, or the rules of the game...
+            */
+
             val newP1Card = player1.getCard
             val newP2Card = player2.getCard
             if (newP1Card != None && newP2Card != None)
@@ -123,7 +135,7 @@ class WarGame {
             else if (newP1Card == None && newP2Card != None)
                 winner = player2
 //            else
-                // who wins if they both ran out?
+                // Who wins if they both ran out?
 
             winner.addCards(holdCards)
         }
