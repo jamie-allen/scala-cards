@@ -135,7 +135,10 @@ class WarGame {
             else if (newP1Card == None && newP2Card != None)
                 winner = player2
 //            else
-                // Who wins if they both ran out?
+                // Who wins if they both ran out?  Should never happen, as one of the two should
+                // have won cards previously.  However, if they both start with 26 cards, and they
+                // somehow have 9 wars before someone wins, they will both run out of cards.  I 
+                // can't ignore this possibility, even though it's infinitesimally small.
 
             winner.addCards(holdCards)
         }
