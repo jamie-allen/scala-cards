@@ -4,6 +4,8 @@ import scala.collection.immutable.Queue
 import org.scalatest.WordSpecLike
 import org.scalatest.Matchers
 
+import com.jamieallen.scalacards.Card
+
 class WarSpec extends WordSpecLike with Matchers {
   "Playing a hand" should {
     "return a Player2 as winner" in {

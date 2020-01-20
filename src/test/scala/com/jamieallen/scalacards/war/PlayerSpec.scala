@@ -4,6 +4,8 @@ import scala.collection.immutable.Queue
 import org.scalatest.WordSpecLike
 import org.scalatest.Matchers
 
+import com.jamieallen.scalacards.Card
+
 class PlayerSpec extends WordSpecLike with Matchers {
   "A player" should {
     "return a card when they have some, and not when they do not" in {

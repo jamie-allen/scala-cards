@@ -1,8 +1,33 @@
+/********************************************************
+ * Copyright Jamie Allen, 2020
+ *
+ * Why yes, this is a flower box.  I'm old school.
+ *
+ * War is a card game, usually played by two players.  Shuffled cards are dealt out 
+ * evenly to each player, and the players place one card down at a time against each 
+ * other to win.  Whomever has the highest card (where 2 is the lowest and Ace is the
+ * highest) wins the hand.
+ *
+ * It is possible for two cards to be the same value but from different suits (ie, 
+ * player 1 plays the 7 of spades, and player 2 plays the 7 of diamonds).  When this 
+ * happens, a "war" occurs.  Each player deals 2 cards (without showing what they are), 
+ * and then flips up the third.  Whomever has the highest of those two cards wins all 
+ * of the cards set aside in that battle.  If a match happens again, the players do it 
+ * again until someone wins the hand.
+ *
+ * The object is to win all of the cards from the other player.  If a player runs out 
+ * of cards in their current deck, they pick up the stack they've won and begin to play 
+ * from that.  This happens until one of the players runs out of all of their cards.
+ *
+ * I've coded this is in Scala as an interesting programming exercise, because it 
+ * involves recursion and other interesting rules.  And because I've missed programming.
+ *
+ ********************************************************/
+
 package com.jamieallen.scalacards.war
 
+import com.jamieallen.scalacards._
 import scala.collection.immutable.Queue
-
-case class Card(id: Int, name: String)
 
 case class Player(name: String, var cards: Queue[Card]) {
     var newCards = Queue[Card]()
@@ -38,72 +63,8 @@ case class Player(name: String, var cards: Queue[Card]) {
     }
 }
 
-object Deck extends App {
-  println("Playing war!")
-
-  val shuffledDeck = scala.util.Random.shuffle(
-    Seq(
-        Card(1, "2 of Clubs"),
-        Card(2, "3 of Clubs"),
-        Card(3, "4 of Clubs"),
-        Card(4, "5 of Clubs"),
-        Card(5, "6 of Clubs"),
-        Card(6, "7 of Clubs"),
-        Card(7, "8 of Clubs"),
-        Card(8, "9 of Clubs"),
-        Card(9, "10 of Clubs"),
-        Card(10, "Jack of Clubs"),
-        Card(11, "Queen of Clubs"),
-        Card(12, "King of Clubs"),
-        Card(13, "Ace of Clubs"),
-
-        Card(14, "2 of Diamonds"),
-        Card(15, "3 of Diamonds"),
-        Card(16, "4 of Diamonds"),
-        Card(17, "5 of Diamonds"),
-        Card(18, "6 of Diamonds"),
-        Card(19, "7 of Diamonds"),
-        Card(20, "8 of Diamonds"),
-        Card(21, "9 of Diamonds"),
-        Card(22, "10 of Diamonds"),
-        Card(23, "Jack of Diamonds"),
-        Card(24, "Queen of Diamonds"),
-        Card(25, "King of Diamonds"),
-        Card(26, "Ace of Diamonds"),
-
-        Card(27, "2 of Hearts"),
-        Card(28, "3 of Hearts"),
-        Card(29, "4 of Hearts"),
-        Card(30, "5 of Hearts"),
-        Card(31, "6 of Hearts"),
-        Card(32, "7 of Hearts"),
-        Card(33, "8 of Hearts"),
-        Card(34, "9 of Hearts"),
-        Card(35, "10 of Hearts"),
-        Card(36, "Jack of Hearts"),
-        Card(37, "Queen of Hearts"),
-        Card(38, "King of Hearts"),
-        Card(39, "Ace of Hearts"),
-
-        Card(40, "2 of Spades"),
-        Card(41, "3 of Spades"),
-        Card(42, "4 of Spades"),
-        Card(43, "5 of Spades"),
-        Card(44, "6 of Spades"),
-        Card(45, "7 of Spades"),
-        Card(46, "8 of Spades"),
-        Card(47, "9 of Spades"),
-        Card(48, "10 of Spades"),
-        Card(49, "Jack of Spades"),
-        Card(50, "Queen of Spades"),
-        Card(51, "King of Spades"),
-        Card(52, "Ace of Spades")
-    )
-  )
-  println(s"Shuffled deck: $shuffledDeck")
-
-
-  val wargame = new WarGame().play(shuffledDeck)
+object WarGame {
+    new WarGame().play(Deck.shuffledDeck)
 }
 
 class WarGame {
