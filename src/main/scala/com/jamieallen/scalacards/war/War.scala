@@ -99,48 +99,87 @@ class WarGame {
         // equivalent cards.
         val result = (p1Card.get.id % 13) - (p2Card.get.id % 13)
         if (result > 0) {
-            println(s"${player1.name} WINS with $result! P1: ${p1Card.get}, P2: ${p2Card.get}")
+            println(s"${player1.name} WINS with $result! P1: $p1Card, P2: $p2Card")
             winner = player1
         }
         else if (result < 0) {
-            println(s"${player2.name} WINS with $result! P1: ${p1Card.get}, P2: ${p2Card.get}")
+            println(s"${player2.name} WINS with $result! P1: $p1Card, P2: $p2Card")
             winner = player2
         }
         else {
             // WAR!  Get 2 cards from each to hold as winnings, and then play the next two
             println("*********** War! ***********")
-            val holdCards: Seq[Card] = List()
-            player1.getCard.map(_ +: holdCards)
-            player1.getCard.map(_ +: holdCards)
-            player2.getCard.map(_ +: holdCards)
-            player2.getCard.map(_ +: holdCards)
+            var holdCards: List[Card] = List()
 
-            /*
-            / THERE IS A FUNDAMENTAL PROBLEM WITH THIS CODE.
-            /
-            / I haven't figured out how to handle when a player runs out of cards in the middle 
-            / of a war.  The logic is convoluted, as they could run out in the middle of getting
-            / two cards in the preceding code, hence mapping over the Options.  The flaw is 
-            / making the program end early.
-            /
-            / As of now, I haven't figure out how to structure this, or the rules of the game...
-            */
+            // Get cards to hold to the side for this war from each player; the 
+            // braces here limit the scope of the first hold cards
+            var newP1Card: Option[Card] = None
+            var newP2Card: Option[Card] = None
+            
+            {
+                val p1HoldCard1 = player1.getCard
+                val p2HoldCard1 = player2.getCard
 
-            val newP1Card = player1.getCard
-            val newP2Card = player2.getCard
-            if (newP1Card != None && newP2Card != None)
-                winner = playHand(player1, player2, newP1Card, newP2Card)
-            else if (newP1Card != None && newP2Card == None)
-                winner = player1
-            else if (newP1Card == None && newP2Card != None)
-                winner = player2
-//            else
-                // Who wins if they both ran out?  Should never happen, as one of the two should
-                // have won cards previously.  However, if they both start with 26 cards, and they
-                // somehow have 9 wars before someone wins, they will both run out of cards.  I 
-                // can't ignore this possibility, even though it's infinitesimally small.
+                // Make sure neither are out of cards after the first
+                p1HoldCard1 match {
+                    case Some(card) if p2HoldCard1 == None => newP2Card = p2Card
+                    case Some(card) => {
+                        holdCards = p1HoldCard1.get :: holdCards
+                        holdCards = p2HoldCard1.get :: holdCards
+                    }
+                    case None if p2HoldCard1 == None => {
+                        // Who wins if they both ran out?  The official rules say this is a draw
+                        println("Both players are out of cards, this a is a DRAW!")
+                        System.exit(1)
+                    }
+                    case _ => newP1Card = p1Card
+                }
 
-            winner.addCards(holdCards)
+                // Make sure neither are out of cards after the second
+                if (winner == null) {
+                    val p1HoldCard2 = player1.getCard
+                    val p2HoldCard2 = player2.getCard
+                    p1HoldCard2 match {
+                        case Some(card) if p2HoldCard2 == None => {
+                            newP2Card = if (newP2Card == None) p2HoldCard1 else newP2Card
+                        }
+                        case Some(card) => {
+                            holdCards = p1HoldCard2.get :: holdCards
+                            holdCards = p2HoldCard2.get :: holdCards
+                        }
+                        case None if p2HoldCard2 == None => {
+                            // Who wins if they both ran out?  The official rules say this is a draw
+                            println("Both players are out of cards, this a is a DRAW!")
+                            System.exit(1)
+                        }
+                        case _ => newP2Card = p2Card
+                    }
+                }
+            }
+
+            // If both players have enough cards, recursively play war until someone wins
+            if (winner == null) {
+                newP1Card = if (newP1Card == None) player1.getCard else newP1Card
+                newP2Card = if (newP2Card == None) player2.getCard else newP2Card
+                if (newP1Card != None && newP2Card != None)
+                    winner = playHand(player1, player2, newP1Card, newP2Card)
+                else if (newP1Card != None && newP2Card == None)
+                    winner = player1
+                else if (newP1Card == None && newP2Card != None)
+                    winner = player2
+                else {
+                    // Who wins if they both ran out?  The official rules say this is a draw
+                    println("Both players are out of cards, this a is a DRAW!")
+                    System.exit(1)
+                }
+
+                winner.addCards(holdCards)
+            }
+        }
+
+        if (winner == null) {
+            // Something went very wrong with my logic, we should always have a winner
+            throw new Exception("No winner!")
         }
 
         winner
