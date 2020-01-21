@@ -16,7 +16,7 @@ class WarSpec extends WordSpecLike with Matchers {
 
         var p1Card = player1.getCard
         var p2Card = player2.getCard
-        new WarGame().playHand(player1, player2, p1Card, p2Card) should equal(player2)
+        new WarGame("foo", "bar").playHand(player1, player2, p1Card, p2Card) should equal(player2)
     }
 
     "return a Player1 as winner" in {
@@ -27,7 +27,7 @@ class WarSpec extends WordSpecLike with Matchers {
 
         var p1Card = player1.getCard
         var p2Card = player2.getCard
-        new WarGame().playHand(player1, player2, p1Card, p2Card) should equal(player1)
+        new WarGame("foo", "bar").playHand(player1, player2, p1Card, p2Card) should equal(player1)
     }
 
     "return player2 as a winner when a war takes place with player1 having only 1 cards" in {
@@ -38,7 +38,7 @@ class WarSpec extends WordSpecLike with Matchers {
 
         var p1Card = player1.getCard
         var p2Card = player2.getCard
-        new WarGame().playHand(player1, player2, p1Card, p2Card) should equal(player2)
+        new WarGame("foo", "bar").playHand(player1, player2, p1Card, p2Card) should equal(player2)
     }
 
     "return player2 as a winner when a war takes place with player1 having only 2 cards" in {
@@ -49,7 +49,7 @@ class WarSpec extends WordSpecLike with Matchers {
 
         var p1Card = player1.getCard
         var p2Card = player2.getCard
-        new WarGame().playHand(player1, player2, p1Card, p2Card) should equal(player2)
+        new WarGame("foo", "bar").playHand(player1, player2, p1Card, p2Card) should equal(player2)
     }
 
     "return player2 as a winner when a war takes place with player1 having only 3 cards" in {
@@ -60,7 +60,7 @@ class WarSpec extends WordSpecLike with Matchers {
 
         var p1Card = player1.getCard
         var p2Card = player2.getCard
-        new WarGame().playHand(player1, player2, p1Card, p2Card) should equal(player2)
+        new WarGame("foo", "bar").playHand(player1, player2, p1Card, p2Card) should equal(player2)
     }
 
     "return player2 as a winner when a war takes place with player2 having the better 4th card" in {
@@ -71,7 +71,7 @@ class WarSpec extends WordSpecLike with Matchers {
 
         var p1Card = player1.getCard
         var p2Card = player2.getCard
-        new WarGame().playHand(player1, player2, p1Card, p2Card) should equal(player2)
+        new WarGame("foo", "bar").playHand(player1, player2, p1Card, p2Card) should equal(player2)
     }
 
     "return player1 as a winner when a war takes place with player2 having only 1 card" in {
@@ -82,7 +82,7 @@ class WarSpec extends WordSpecLike with Matchers {
 
         var p1Card = player1.getCard
         var p2Card = player2.getCard
-        new WarGame().playHand(player1, player2, p1Card, p2Card) should equal(player1)
+        new WarGame("foo", "bar").playHand(player1, player2, p1Card, p2Card) should equal(player1)
     }
 
     "return player1 as a winner when a war takes place with player1 having only 2 cards" in {
@@ -93,7 +93,7 @@ class WarSpec extends WordSpecLike with Matchers {
 
         var p1Card = player1.getCard
         var p2Card = player2.getCard
-        new WarGame().playHand(player1, player2, p1Card, p2Card) should equal(player1)
+        new WarGame("foo", "bar").playHand(player1, player2, p1Card, p2Card) should equal(player1)
     }
 
     "return player1 as a winner when a war takes place with player1 having only 3 cards" in {
@@ -104,7 +104,7 @@ class WarSpec extends WordSpecLike with Matchers {
 
         var p1Card = player1.getCard
         var p2Card = player2.getCard
-        new WarGame().playHand(player1, player2, p1Card, p2Card) should equal(player1)
+        new WarGame("foo", "bar").playHand(player1, player2, p1Card, p2Card) should equal(player1)
     }
 
     "return player1 as a winner when a war takes place with player1 having the better 4th card" in {
@@ -115,7 +115,7 @@ class WarSpec extends WordSpecLike with Matchers {
 
         var p1Card = player1.getCard
         var p2Card = player2.getCard
-        new WarGame().playHand(player1, player2, p1Card, p2Card) should equal(player1)
+        new WarGame("foo", "bar").playHand(player1, player2, p1Card, p2Card) should equal(player1)
     }
   }
 }

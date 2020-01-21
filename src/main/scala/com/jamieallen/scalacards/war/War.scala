@@ -28,6 +28,7 @@ package com.jamieallen.scalacards.war
 
 import com.jamieallen.scalacards._
 import scala.collection.immutable.Queue
+import scala.io.StdIn.readLine
 
 case class Player(name: String, var cards: Queue[Card]) {
     var newCards = Queue[Card]()
@@ -64,18 +65,20 @@ case class Player(name: String, var cards: Queue[Card]) {
 }
 
 object WarGame extends App {
-    val winner = new WarGame().play(Deck.shuffledDeck)
-    println(s"\n\n================================================\nFINISHED! The winner is ${winner.name}")
+    val player1Name = readLine("Please enter the name of Player1: ")
+    val player2Name = readLine("Please enter the name of Player2: ")
+    val winner = new WarGame(player1Name, player2Name).play(Deck.shuffledDeck)
+    println(s"\n================================================\nFINISHED! The winner is ${winner.name}")
 }
 
-class WarGame {
+class WarGame(player1Name: String, player2Name: String) {
     def play(shuffledDeck: Seq[Card]): Player = {
         // Deal the shuffled cards, one at a time to each
         val (player1Cards, player2Cards) = Deck.shuffledDeck.partition(_.id % 2 == 0)
 
         // Set up the players with their cards, and play
-        val player1 = Player("Layla", Queue.from(player1Cards))
-        val player2 = Player ("Sophie", Queue.from(player2Cards))
+        val player1 = Player(player1Name, Queue.from(player1Cards))
+        val player2 = Player (player2Name, Queue.from(player2Cards))
 
         // Get their first cards and start
         var p1Card = player1.getCard
@@ -83,6 +86,9 @@ class WarGame {
         var winner: Player = null
         while (p1Card != None && p2Card != None) {
             winner = playHand(player1, player2, p1Card, p2Card)
+
+            // Because of the condition in the while statement, I'm okay 
+            // with using Option.get here, though I admit it's ugly
             winner.addCards(List(p1Card.get, p2Card.get))
             p1Card = player1.getCard
             p2Card = player2.getCard
