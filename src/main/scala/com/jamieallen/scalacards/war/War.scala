@@ -108,7 +108,7 @@ class WarGame {
         }
         else {
             // WAR!  Get 2 cards from each to hold as winnings, and then play the next two
-            println("*********** War! ***********")
+            println("*********** War! Feel my wrath! ***********")
             var holdCards: List[Card] = List()
 
             // Get cards to hold to the side for this war from each player; the 
