@@ -78,7 +78,7 @@ class WarGame(player1Name: String, player2Name: String) {
 
         // Set up the players with their cards, and play
         val player1 = Player(player1Name, Queue.from(player1Cards))
-        val player2 = Player (player2Name, Queue.from(player2Cards))
+        val player2 = Player(player2Name, Queue.from(player2Cards))
 
         // Get their first cards and start
         var p1Card = player1.getCard
